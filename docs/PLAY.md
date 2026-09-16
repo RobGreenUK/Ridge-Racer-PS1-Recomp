@@ -20,3 +20,7 @@ Preserve these and your saves when replacing the local output.
 
 All game-derived data, saves and diagnostics are local. Do not upload the playable
 folder, generated game code, disc files or extracted assets to the source repository.
+
+Custom render resolution is entered as **Horizontal × Vertical**, followed by
+**Apply**. Both dimensions are editable and must match the selected 4:3 or 16:9
+aspect ratio. Invalid dimensions leave the applied resolution unchanged.
