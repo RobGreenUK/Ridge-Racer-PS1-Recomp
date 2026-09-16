@@ -15,7 +15,11 @@ CMakeLists.txt VERSION game.toml game_options.toml symbols.toml psx_symbols.h
 codegen_setup.c codegen_setup.h catalog_identity.json disc_manifest.json disc_probe.json
 framework_pins.txt""".split())
 FILES.add('Test Ridge Racer Pacing.command')
-DOCS = {'docs/BUILD_MACOS.md', 'docs/BUILD_WINDOWS.md', 'docs/PLAY.md'}
+DOCS = {
+    'docs/BUILD_MACOS.md', 'docs/BUILD_WINDOWS.md', 'docs/PLAY.md',
+    'docs/TECHNICAL_OVERVIEW.md', 'docs/ARCHITECTURE.md',
+    'docs/RENDERING.md', 'docs/DEVELOPMENT.md',
+}
 PREFIXES = ('src/', 'launcher/', 'scripts/', 'tools/', 'tests/', 'cmake/', 'patches/', 'seeds/', 'mods/preloaded/')
 EXTENSIONS = {'.c', '.h', '.cpp', '.py', '.sh', '.ps1', '.cmd', '.swift', '.cmake', '.toml', '.txt', '.md', '.patch'}
 ASSETS = {'assets/psxrecomp.ico', 'assets/psxrecomp.png', 'assets/psxrecomp.svg'}
