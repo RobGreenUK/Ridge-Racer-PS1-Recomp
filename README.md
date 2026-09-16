@@ -116,6 +116,15 @@ ignored by Git. They are local inputs or outputs, not source release material.
 Do not upload game-derived files or playable packages to GitHub, including Releases,
 Actions artifacts or Git LFS.
 
+## Technical documentation
+
+The [technical documentation](docs/TECHNICAL_OVERVIEW.md) explains how this project
+was built, for human contributors and AI coding agents. It covers the runtime and
+renderer architecture, local code and asset generation, interpolation and timing,
+rendering corrections, source navigation, testing and contribution workflow.
+The aim is to share implementation knowledge that others can inspect, maintain
+and reuse within the applicable licences.
+
 ## Acknowledgements
 
 Thank you to the authors, maintainers and contributors of the projects that make
