@@ -1,0 +1,82 @@
+format_version = 5
+id = "ridge.presentation"
+version = "1.0.0"
+name = "Ridge Racer Display"
+author = "Ridge Racer recomp project"
+description = "Experimental wider 3D presentation for the USA release. Original guest timing is unchanged."
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "SCUS-94300"
+
+[[feature]]
+id = "view"
+name = "Widescreen view"
+description = "Reveal more of the 3D scene. Side culling and HUD placement remain under validation."
+group = "Visual"
+default_enabled = false
+
+[[option]]
+feature = "view"
+id = "mode"
+label = "View mode"
+type = "choice"
+default = "wide"
+[[option.choice]]
+value = "wide"
+label = "16:9"
+
+[[option.choice]]
+value = "adaptive"
+label = "Adaptive (4:3 to 16:9)"
+
+[[plugin]]
+feature = "view"
+id = "ridge.view"
+
+[[feature]]
+id = "motion"
+name = "Temporal frame blending"
+description = "Blend completed images at the selected presentation rate. No motion vectors or new geometry; guest timing is unchanged. May add ghosting and latency."
+group = "Visual"
+default_enabled = false
+
+[[option]]
+feature = "motion"
+id = "target"
+label = "Presentation target"
+type = "choice"
+default = "0"
+
+[[option.choice]]
+value = "0"
+label = "Display refresh"
+
+[[option.choice]]
+value = "60"
+label = "60 presents / second"
+
+[[option.choice]]
+value = "90"
+label = "90 presents / second"
+
+[[option.choice]]
+value = "120"
+label = "120 presents / second"
+
+[[option.choice]]
+value = "144"
+label = "144 presents / second"
+
+[[option.choice]]
+value = "165"
+label = "165 presents / second"
+
+[[option.choice]]
+value = "240"
+label = "240 presents / second"
+
+[[plugin]]
+feature = "motion"
+id = "ridge.motion"

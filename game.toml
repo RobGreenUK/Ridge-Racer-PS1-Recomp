@@ -1,0 +1,68 @@
+# Autofilled by tools/new_project_layout/probe_disc.py from your legal dump.
+# Review before shipping. Runtime quirks / overlay seeds still need hand work.
+
+[game]
+name = "RidgeRacer"
+id = "SCUS-94300"
+players = 1
+exe = "disc/SCUS-943.00"
+disc = "Ridge Racer (USA)/Ridge Racer (USA).cue"
+load_address = "0x80010000"
+entry_pc = "0x80040004"
+text_size = "0x0006A800"
+stack_base = "0x801FFFF0"
+
+# Digests are for data Track 01 (first BINARY FILE / TRACK 01).
+[prepare_disc]
+out_dir = "disc"
+bin_name = "Ridge Racer (USA) (Track 01).bin"
+cue_name = "Ridge Racer (USA).cue"
+boot_exe = "SCUS-943.00"
+known_sizes = [3683232]
+known_md5 = [
+  "ec755afa6ca49432445384b870412dfb",
+]
+known_sha1 = [
+  "5968ee90644e6536ddf544a45fc510a7cc64bb12",
+]
+known_crc32 = [
+  "0de7775b",
+]
+
+[recompiler]
+seeds = "seeds/ghidra_funcs.txt"
+out_dir = "generated"
+strict = true
+# Diagnostic callbacks are inert unless RIDGE_SCENE_CAPTURE is set.
+mod_function_entry_funcs = ["0x80015B90", "0x800157D8", "0x800158E8", "0x800159F8", "0x800143CC", "0x800195B0", "0x8001BD80", "0x80041538", "0x8002E0BC", "0x80020BB0", "0x800348E8", "0x80034F78", "0x80035F28", "0x800372B0", "0x80018358", "0x8002A99C", "0x800397E4", "0x8002A78C"]
+
+[runtime]
+window_title = "RidgeRacer Recompiled"
+memcard_dir = "saves"
+
+[video]
+renderer = "opengl"
+aspect_ratio = "4:3"
+
+[controller]
+default_mode = "digital"
+
+# Presentation-only opt-ins. No guest clock or physics patches.
+[widescreen]
+offer = true
+native_wide = true
+gte_game_mode = true
+hud_sprt_squash = true
+auto_ui_squash = true
+adaptive_view = true
+offer_ultrawide = false
+
+[widescreen.cull]
+auto_screen_x = true
+
+# Online mount gate: digests + track count + optional TOC fingerprint
+# (see docs/NETPLAY.md).
+[netplay]
+require_cue = true
+required_tracks = 14
+required_disc_fp = "1670073dd63e1212add44a0d78bae272cfb4e0091504562f9950b9d9a09db403"

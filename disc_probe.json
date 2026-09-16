@@ -1,0 +1,29 @@
+{
+  "cue_path": "Ridge Racer (USA)/Ridge Racer (USA).cue",
+  "cue_name": "Ridge Racer (USA).cue",
+  "bin_name": "Ridge Racer (USA) (Track 01).bin",
+  "track_count": 14,
+  "data_track_size": 3683232,
+  "data_track_md5": "ec755afa6ca49432445384b870412dfb",
+  "data_track_sha1": "5968ee90644e6536ddf544a45fc510a7cc64bb12",
+  "data_track_crc32": "0de7775b",
+  "boot_exe": "SCUS-943.00",
+  "serial": "SCUS-94300",
+  "serial_exe": "SCUS_943.00",
+  "volume_id": "RIDGERACERUSA",
+  "display_name": "RidgeRacer",
+  "load_address": "0x80010000",
+  "entry_pc": "0x80040004",
+  "text_size": "0x0006A800",
+  "stack_base": "0x801FFFF0",
+  "require_cue": true,
+  "required_disc_fp": "1670073dd63e1212add44a0d78bae272cfb4e0091504562f9950b9d9a09db403",
+  "boot_exe_sha256": "bde353330bf4032d8c4b86a04dbcc78c95e6b2c5aa17dc15b79de613b52cf8c5",
+  "seed_count": 628,
+  "warnings": [],
+  "notes": [
+    "entry_pc/load_address/text_size/stack_base taken from PS-X EXE header.",
+    "seeds are first-pass boot-EXE JAL targets (+ entry); expect to grow as overlays / runtime paths are discovered.",
+    "required_disc_fp is psxrecomp-toc-v1 (matches runtime DiscIdentity)."
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "serial": "SCUS-94300",
+  "tracks": [
+    {
+      "file": "Ridge Racer (USA) (Track 01).bin",
+      "bytes": 3683232,
+      "sectors": 1566,
+      "sha256": "087896cebcc2892be651a2f3e59d963daa35e2f861e25ab46e8ecfaf7c8e1c68"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 02).bin",
+      "bytes": 56419776,
+      "sectors": 23988,
+      "sha256": "310d39dfde51716e075d5ca3c066dae9338ceeba526a025813f5483c1b8ab67e"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 03).bin",
+      "bytes": 48500592,
+      "sectors": 20621,
+      "sha256": "85a8d023b65192471a66410bae394b0eb12937af56b8f9a582e4b9e9fb517d21"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 04).bin",
+      "bytes": 56567952,
+      "sectors": 24051,
+      "sha256": "21b3e7a2f8d723de284c1917c74116fd8e0061f6ee3a7f4a3993dc2d96ef0eee"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 05).bin",
+      "bytes": 57640464,
+      "sectors": 24507,
+      "sha256": "7a6aade4558f4608c8ffa707353c188133cc8127c6b58d1534943ad1c7a86237"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 06).bin",
+      "bytes": 54481728,
+      "sectors": 23164,
+      "sha256": "691e11cd3b0b1c7719b52c1a8b05b4bf2babc709ffdeb070b500e472f280ac3a"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 07).bin",
+      "bytes": 53670288,
+      "sectors": 22819,
+      "sha256": "26cccd46c01e205346aa708a806c246f22640874c9ceea89aab886d8ef2890cb"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 08).bin",
+      "bytes": 21523152,
+      "sectors": 9151,
+      "sha256": "c67c1dfa8cfa7b9172794a91e8e9d6b0aa7e7650c3ca7bfcf92c61c99226b511"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 09).bin",
+      "bytes": 13629840,
+      "sectors": 5795,
+      "sha256": "a3b2164d8946aab8e67cb16314b40925ce21199072b43bd17a2bc6e4a5b6665a"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 10).bin",
+      "bytes": 2065056,
+      "sectors": 878,
+      "sha256": "47d2c3e3847aa6ef39411bc1144b549b6fd7552cd02e3802e3c2405ed69924a8"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 11).bin",
+      "bytes": 21878304,
+      "sectors": 9302,
+      "sha256": "ced83c2449659854711d003bfab66c0152ec45fde3c45f2cb9f85d7ddb2d9180"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 12).bin",
+      "bytes": 17449488,
+      "sectors": 7419,
+      "sha256": "cc7acd8a5275ecf34ba89036f740be96b9cafccc7a9bba84ef275c8df97cfef8"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 13).bin",
+      "bytes": 26610528,
+      "sectors": 11314,
+      "sha256": "c6dd2f5cde4f53dbca35ce10f71072c6ac1956ebf216d0d7011d437dd978be2e"
+    },
+    {
+      "file": "Ridge Racer (USA) (Track 14).bin",
+      "bytes": 33059712,
+      "sectors": 14056,
+      "sha256": "7ff95cc21f36703562a9942a6e8f4bb15e411112c52cfec0db3b891b7811945c"
+    }
+  ]
+}

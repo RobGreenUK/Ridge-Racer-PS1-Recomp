@@ -1,0 +1,16 @@
+# Each row: game controller-read calls, active-low PS1 pad word (hex).
+# Fixed start/menu input followed by acceleration, steering/braking and pause.
+120 ffff
+2 fff7
+60 ffff
+2 fff7
+240 ffff
+240 bfff
+45 bf7f
+120 bfff
+30 7fff
+2 fff7
+60 ffff
+2 fff7
+300 bfff
+60 ffff

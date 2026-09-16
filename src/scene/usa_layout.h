@@ -1,0 +1,21 @@
+/* SCUS-94300, SHA256 bde35333...52cf8c5.
+ * Layout fields remain raw until their units/semantics are verified. */
+#pragma once
+#define RR_NIGHT_STATE 0x8017693Cu
+#define RR_STATE 0x801D6D28u
+#define RR_LOOP 0x8007F114u
+#define RR_WAIT_SCALE 0x80130CF0u
+#define RR_RACE_CALLS 0x80176AE4u
+#define RR_PHASE 0x801DCB7Cu
+#define RR_PAUSED 0x801DB000u
+#define RR_PAD 0x801D6DDEu
+#define RR_PLAYER 0x80080194u
+#define RR_CAMERA_POSITION 0x801DCB84u
+#define RR_CAMERA_MATRIX 0x801ECD60u
+#define RR_ENTITIES 0x801ECDC0u
+#define RR_ENTITY_SIZE 0x114u
+#define RR_ENTITY_COUNT 12u
+#define RR_TRACK_POINTER 0x80176C18u
+#define RR_TRACK_COUNT 0x801ECC04u
+#define RR_TRACK_MIRROR_X 0x80176B64u
+#define RR_MAIN_AFTER_DRAWSYNC_CALL 0x80011C4Cu

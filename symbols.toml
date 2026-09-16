@@ -1,0 +1,81 @@
+# RidgeRacer — progressive symbol map (partial decomp)
+# Discover → label here → manipulate via PSX_FN_* (tools/sync_symbols.py).
+# Gate emit=true only when the entry is safe to own for AOT / host hooks.
+# See psxrecomp/docs/SYMBOLS.md.
+
+[[func]]
+pc = 0x80040004
+name = "BootEntry"
+emit = false
+status = "guessed"
+note = "SYSTEM.CNF / EXE entry PC (probe seed)"
+
+[[func]]
+pc = 0x800143CC
+name = "RaceMain"
+emit = false
+status = "confirmed"
+note = "USA state table index 1; entry increments 0x80176AE4. Live playable race verified."
+
+[[func]]
+pc = 0x800195B0
+name = "CarSimulateCandidate"
+emit = false
+status = "guessed"
+note = "USA car-update call at 0x8001C018; per-update integer dynamics/input. Units under investigation."
+
+[[func]]
+pc = 0x8001BD80
+name = "CarUpdateCandidate"
+emit = false
+status = "guessed"
+note = "USA race handler calls with player structure 0x80080194; integration/collision candidate."
+
+[[func]]
+pc = 0x80041538
+name = "DrawSync"
+emit = false
+status = "guessed"
+note = "Main-loop call returns to 0x80011C4C after state handler. SDK synchronization candidate."
+
+[[func]]
+pc = 0x80047324
+name = "SetRotationMatrix"
+emit = false
+status = "confirmed"
+note = "Copies five words at a0 to GTE rotation control registers 0..4. Race passes 0x801ECD60."
+
+[[func]]
+pc = 0x8002E0BC
+name = "ReadPad"
+emit = false
+status = "confirmed"
+note = "Reads SDK packet at 0x80176948; digital path decodes buttons and rising edges. Main returns to 0x80011CA0."
+
+[[func]]
+pc = 0x80020BB0
+name = "RenderCar"
+emit = false
+status = "confirmed"
+note = "USA car draw path: a0 owner structure, type+2 indexes model table 0x80056B40; composes car/camera matrices."
+
+[[func]]
+pc = 0x800348E8
+name = "RenderModel"
+emit = false
+status = "confirmed"
+note = "USA model dispatcher: a2 model ID, 16-byte directory, six primitive groups. GTE transform established by caller."
+
+[[func]]
+pc = 0x80034F78
+name = "RenderModelSubdivided"
+emit = false
+status = "confirmed"
+note = "Alternate model dispatcher with the same a2 ID and context+8 directory; used by 0x800158E8 scenery lists and effects."
+
+[[func]]
+pc = 0x80035F28
+name = "RenderModelClipped"
+emit = false
+status = "confirmed"
+note = "Alternate model dispatcher used by the 0x800159F8 scenery list; same GTE transform and six-group model directory."
