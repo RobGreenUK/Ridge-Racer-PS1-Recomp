@@ -34,7 +34,7 @@ seeds = "seeds/ghidra_funcs.txt"
 out_dir = "generated"
 strict = true
 # Diagnostic callbacks are inert unless RIDGE_SCENE_CAPTURE is set.
-mod_function_entry_funcs = ["0x80015B90", "0x800157D8", "0x800158E8", "0x800159F8", "0x800143CC", "0x800195B0", "0x8001BD80", "0x80041538", "0x8002E0BC", "0x80020BB0", "0x800348E8", "0x80034F78", "0x80035F28", "0x800372B0", "0x80018358", "0x8002A99C", "0x800397E4", "0x8002A78C"]
+mod_function_entry_funcs = ["0x80015B90", "0x800157D8", "0x800158E8", "0x800159F8", "0x800143CC", "0x800195B0", "0x8001BD80", "0x80041538", "0x8002E0BC", "0x80020BB0", "0x800348E8", "0x80034F78", "0x80035F28", "0x800372B0", "0x80018358", "0x8002A99C", "0x800397E4", "0x8002A78C", "0x800477A4", "0x80043F38"]
 
 [runtime]
 window_title = "RidgeRacer Recompiled"

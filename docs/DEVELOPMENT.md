@@ -32,6 +32,7 @@ private development records are not prerequisites.
 | IPC and sample assembly | [platform helpers](../src/platform), [live_protocol.h](../src/scene/live_protocol.h), [live_client.h](../src/scene/live_client.h) |
 | Interpolation | [timeline.h](../src/scene/timeline.h), [presentation_timeline.h](../src/scene/presentation_timeline.h) |
 | World rendering | [preview.cpp](../src/scene/preview.cpp), [mesh.h](../src/scene/mesh.h), [depth_renderer.h](../src/scene/depth_renderer.h) |
+| Title flag geometry | [menu_flag.h](../src/scene/menu_flag.h), [menu/HUD capture](../src/scene/hud.c) |
 | Original screens, sky and HUD | [screen_client.h](../src/scene/screen_client.h), [sky_renderer.h](../src/scene/sky_renderer.h), [hud_renderer.h](../src/scene/hud_renderer.h) |
 | Launchers and settings | [launcher](../launcher), [preloaded mod](../mods/preloaded/packages/ridge.presentation/1.0.0/manifest.toml) |
 | Extraction and diagnostics | [tools](../tools), [tests](../tests) |

@@ -31,6 +31,7 @@ void ridge_screen_publish(void){
     shared->magic=RR_SCREEN_MAGIC;shared->sequence++;shared->state=ridge_main_scene_active?psx_mod_read_half(RR_STATE):0xffffffffu;
     // Replay setup has no matching scene yet. Keep its original image until
     // the first actual replay geometry sample is available.
+    if(ridge_native_menu_state(shared->state))shared->state=0xffffffffu;
     if(ridge_replay_state(shared->state)&&!ridge_model_count)shared->state=0xffffffffu;
     shared->width=shared->height=0;
     if(!ridge_scene_state(shared->state)){

@@ -34,3 +34,9 @@ struct RRLiveSky {uint32_t magic,sequence;struct RRRawSky sky;};
 #include "hud.h"
 #define RR_HUD_MAGIC 0x52524831u
 struct RRLiveHud {uint32_t magic,sequence,count;uint32_t words[RR_HUD_CAP];};
+
+// Menu packet streams include the animated flag's camera-space vertices. Split
+// below the platform datagram limit; install only a complete matching sequence.
+#define RR_MENU_HUD_MAGIC 0x52524832u
+#define RR_MENU_HUD_CHUNK_CAP 512u
+struct RRMenuHudChunk {uint32_t magic,sequence,total,offset,count,back_count;uint32_t words[RR_MENU_HUD_CHUNK_CAP];};

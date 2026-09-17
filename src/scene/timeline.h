@@ -72,7 +72,7 @@ inline bool wheelAxle(uint64_t key) {
     return car&&(site==0x80020f8cu||site==0x8002102cu);
 }
 struct Sky {float pitch=0,yaw=0,roll=0;uint32_t mirror=0,clut=0,rgb=0,enabled=0;};
-struct Frame { double time; uint32_t flags; Vec camera; Quat rotation; Vec car; float yaw;std::vector<ModelPose> models;Sky sky;std::vector<uint32_t>hud; };
+struct Frame { double time; uint32_t flags; Vec camera; Quat rotation; Vec car; float yaw;std::vector<ModelPose> models;Sky sky;std::vector<uint32_t>hud;uint32_t menuBackCount=0; };
 inline bool sceneFlagsCut(uint32_t before,uint32_t after) {
     // Appearance changes do not change the motion timeline. Only the observed
     // forward race transitions 1->2 and 2->3 are continuous; keep other cuts,
@@ -94,13 +94,13 @@ inline Frame interpolate(const Frame&a,const Frame&b,double time) {
     float yawDelta=std::remainder(b.yaw-a.yaw,6.28318530718f);
     Frame result{time,a.flags,a.camera+(b.camera-a.camera)*t,slerp(a.rotation,b.rotation,t),
             a.car+(b.car-a.car)*t,a.yaw+yawDelta*t,{},{},{}};
-    result.hud=a.hud;result.sky=a.sky;
+    result.menuBackCount=a.menuBackCount;result.hud=a.hud;result.sky=a.sky;
     if(a.sky.enabled&&b.sky.enabled&&a.sky.mirror==b.sky.mirror) {
         result.sky.pitch=a.sky.pitch+std::remainder(b.sky.pitch-a.sky.pitch,4096.f)*t;
         result.sky.yaw=a.sky.yaw+std::remainder(b.sky.yaw-a.sky.yaw,4096.f)*t;
         result.sky.roll=a.sky.roll+std::remainder(b.sky.roll-a.sky.roll,4096.f)*t;
     }
-    if(t>=1){result.flags=b.flags;result.hud=b.hud;result.sky=b.sky;result.models=b.models;return result;}
+    if(t>=1){result.menuBackCount=b.menuBackCount;result.flags=b.flags;result.hud=b.hud;result.sky=b.sky;result.models=b.models;return result;}
     for(const auto&previous:a.models) {
         auto pose=previous;
         // RenderCar alternates wheel meshes using spin bit 12. The axle is

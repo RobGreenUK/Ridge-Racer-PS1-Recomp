@@ -16,7 +16,7 @@ HARNESS=r'''
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-uint64_t psx_cycle_count=12345;uint32_t ridge_hud[RR_HUD_CAP],ridge_hud_count;
+uint64_t psx_cycle_count=12345;uint32_t ridge_hud[RR_HUD_CAP],ridge_hud_count,ridge_hud_back_count;int ridge_hud_valid=1;
 struct RRRawModel ridge_models[RR_MODEL_CAP];unsigned ridge_model_count=1,ridge_model_overflow;
 static PSXModFunctionEntryCallback callback;static unsigned writes;static uint8_t pad[4];
 int psx_mod_register_function_entry_plugin(const char*id,uint32_t pc,PSXModFunctionEntryCallback cb){assert(pc==0x8002e0bc);callback=cb;return 1;}

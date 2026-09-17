@@ -15,6 +15,6 @@ static struct RRRawSky ridge_read_sky(void){
     uint32_t r,g,b;
     if(psx_mod_read_half(0x8017693c)){r=g=b=psx_mod_read_byte(0x8017692d);}
     else {r=psx_mod_read_byte(0x8017692a);g=psx_mod_read_byte(0x8017692b);b=psx_mod_read_byte(0x8017692c);}
-    s.rgb=r|(g<<8)|(b<<16);s.enabled=ridge_scene_state(psx_mod_read_half(RR_STATE));return s;
+    s.rgb=r|(g<<8)|(b<<16);s.enabled=ridge_scene_state(psx_mod_read_half(RR_STATE))&&!ridge_native_menu_state(psx_mod_read_half(RR_STATE));return s;
 }
 #endif

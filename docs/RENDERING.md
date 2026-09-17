@@ -62,6 +62,50 @@ This also lets the startup minigame and menus remain interactive in the main
 window. Their correctness depends on both input forwarding and coherent runtime
 framebuffer readback.
 
+## Selection screens and the animated title flag
+
+For USA SCUS-94300, state 7 uses enhanced course and car preview models.
+The wrappers at `800122A8` and `8001232C` submit ordinary object-bank models
+at return sites `80012310` and `80012394`. Their GTE transforms use the
+normal 160/120 screen centre and projection distance 320. Capture gives each
+submission a stable ordinal identity so repeated wheel models stay distinct.
+The viewer omits the full-size race course, sky and reconstructed distant cars
+in this mode. The game still owns menu input and model animation.
+
+The forward-linked ordering table starts at environment (`80130EA4`)+`70`.
+Slot 0 supplies the tiled background; slots 701–703 supply the statistics graph,
+labels, panels and selectors. Draw the background, enhanced models, then the
+foreground. Menu GP0 packets can contain multiple commands: split these before
+decoding. Keep the authored 4:3 UI centred when displaying widescreen output;
+race HUD edge anchors do not apply to menu packets.
+
+Title states 3 and 12 contain an animated **28 × 20 3D flag grid**. It does not
+use the object-bank model renderer. Read-only hooks observe `RotTransPers3`
+(`800477A4`, callers returning to `800263D4` / `80026480`) and the flag's
+`AddPrim` submission (`80043F38`, return `8002655C`). Capture the game's
+camera-space vertices before integer screen projection, alongside each submitted
+GT4's UVs, vertex colours and ordering. Columns use top/bottom vertex order;
+even clipped columns advance the preceding pair. An extended native packet
+contains the original 12 words, 12 fixed-point coordinate words and three GTE
+projection registers. Native triangle subdivision improves perspective mapping
+at the selected render resolution. Original flag motion, shading, texture detail
+and animation cadence are retained; this is not a replacement model or texture.
+
+Menu streams are bounded to 32,768 words and sent in 512-word chunks with
+sequence, total, offset and background-prefix metadata. The viewer requires both
+complete model and menu streams before publishing a sample. A dropped chunk
+cannot expose half a flag or remove the labels. Original-screen fallback remains
+available during setup and incomplete delivery. Race-only model completion stays
+separately gated. `RRSCENE6` markers preserve the background prefix while the
+viewer continues to read earlier marker formats. Generated packets and captures
+remain private local outputs.
+
+See [menu capture](../src/scene/hud.c), [flag capture](../src/scene/menu_flag.h),
+[model capture](../src/scene/models.c), [packet assembly](../src/scene/live_client.h)
+and the synthetic tests in `tests/test_menu_flag.py`, `test_scene_hud.py` and
+`test_scene_delivery.py`. Visual verification covers Mac Metal at 4:3 and OpenGL
+at 16:9; Windows gameplay still requires native Windows validation.
+
 ## Mirror mode and HUD
 
 A course reflection changes geometry handedness. Applying it indiscriminately to

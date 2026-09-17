@@ -16,8 +16,8 @@ HARNESS = r'''
 #include <stdlib.h>
 static unsigned char ram[0x200000], before[0x200000];
 uint64_t psx_cycle_count = 123456;
-static uint32_t addresses[4];
-static PSXModFunctionEntryCallback callbacks[4];
+static uint32_t addresses[6];
+static PSXModFunctionEntryCallback callbacks[6];
 static unsigned count;
 void ridge_live_publish(void) {}
 #include "models.h"
@@ -27,7 +27,7 @@ void ridge_models_reset(void) {}
 void ridge_models_complete(void) {}
 void ridge_signs_complete(void) {}
 int psx_mod_register_function_entry_plugin(const char *id, uint32_t a, PSXModFunctionEntryCallback cb) {
-    assert(count < 4); addresses[count] = a; callbacks[count++] = cb; return 1;
+    assert(count < 6); addresses[count] = a; callbacks[count++] = cb; return 1;
 }
 uint8_t psx_mod_read_byte(uint32_t a) { assert((a >> 21) == (0x80000000u >> 21)); return ram[a & 0x1fffff]; }
 uint16_t psx_mod_read_half(uint32_t a) { return psx_mod_read_byte(a) | psx_mod_read_byte(a+1)<<8; }
@@ -35,7 +35,7 @@ uint32_t psx_mod_read_word(uint32_t a) { return psx_mod_read_half(a) | (uint32_t
 static void put(uint32_t a, uint32_t v) { for(int i=0;i<4;i++)ram[(a+i)&0x1fffff] = v>>(i*8); }
 int main(void) {
     if (!getenv("RIDGE_SCENE_CAPTURE")) { assert(count == 0); return 0; }
-    assert(count == 4);
+    assert(count == 6);
     CPUState cpu = {0}, saved;
     cpu.gpr[4] = RR_PLAYER;
     cpu.gpr[31] = RR_MAIN_AFTER_DRAWSYNC_CALL;

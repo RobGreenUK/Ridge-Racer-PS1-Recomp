@@ -27,7 +27,7 @@ static void rr_sign_hook(CPUState*cpu,uint32_t address){
 static void rr_sign_complete(void){
     if(!rr_sign_initialized||psx_mod_read_half(0x80176bf8u))return; // alternate cone course
     unsigned state=psx_mod_read_half(RR_STATE);
-    if(!ridge_scene_state(state)||!ridge_model_count)return;
+    if(!ridge_world_state(state)||!ridge_model_count)return;
     struct RRSignPose live[RR_SIGN_COUNT];const struct RRSignPose*signs=live;
     if(state==29){
         unsigned index=psx_mod_read_half(RR_RACE_CALLS);

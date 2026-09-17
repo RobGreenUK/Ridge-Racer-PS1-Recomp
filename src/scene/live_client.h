@@ -10,6 +10,9 @@ class LiveClient {
     RRSocket fd=RR_INVALID_SOCKET;bool ownsPath=false;std::string path;Frame previous{},current{};PresentationTimeline timeline;double produced=0;bool queued=false;
     bool have=false;uint32_t state=0,track=0,currentSequence=0;uint64_t received=0;
     RRAddress inputAddress{};bool inputAddressReady=false;
+    bool hudReady=false;uint32_t hudTotal=~0u,hudCount=0,hudBack=0;
+    std::array<uint32_t,RR_HUD_CAP>hudAssembly{};std::array<bool,RR_HUD_CAP>hudSeen{};
+    bool complete()const{return modelReady&&(!ridge_native_menu_state(state)||hudReady);}
     bool modelReady=false,havePrevious=false;uint64_t completeReceived=0;
     uint32_t assemblyTotal=~0u,assemblyCount=0;
     std::array<bool,RR_MODEL_CAP>seen{};
@@ -40,7 +43,7 @@ public:
         path=p;fd=rr_socket();
         if(fd==RR_INVALID_SOCKET||rr_bind(fd,p.c_str()))throw std::runtime_error("cannot bind live scene endpoint");
         ownsPath=true;
-        if(rr_buffer(fd,SO_RCVBUF,65536)||rr_nonblocking(fd))throw std::runtime_error("cannot configure live scene socket");
+        if(rr_buffer(fd,SO_RCVBUF,262144)||rr_nonblocking(fd))throw std::runtime_error("cannot configure live scene socket");
     }
 
     bool poll(Frame&out,double displayInterval=1./60) {
@@ -51,6 +54,15 @@ public:
         for(int i=0;i<128;i++) {
             int n=rr_receive(fd,packet,sizeof packet);if(n<0)break;
             uint32_t magic=0;if(n>=4)std::memcpy(&magic,packet,4);
+            if(magic==RR_MENU_HUD_MAGIC&&n>=24&&size_t(n)<=sizeof(RRMenuHudChunk)){
+                RRMenuHudChunk h{};std::memcpy(&h,packet,size_t(n));
+                if(!have||!ridge_native_menu_state(state)||h.sequence!=currentSequence||h.total>RR_HUD_CAP||h.offset>h.total||h.count>h.total-h.offset||h.count>RR_MENU_HUD_CHUNK_CAP||h.back_count>h.total||n!=24+h.count*4)continue;
+                if(hudTotal==~0u){hudTotal=h.total;hudBack=h.back_count;}
+                if(h.total!=hudTotal||h.back_count!=hudBack)continue;
+                for(unsigned j=0;j<h.count;j++){unsigned k=h.offset+j;hudAssembly[k]=h.words[j];if(!hudSeen[k]){hudSeen[k]=true;hudCount++;}}
+                if(hudCount==hudTotal){current.hud.assign(hudAssembly.begin(),hudAssembly.begin()+hudTotal);current.menuBackCount=hudBack;hudReady=true;if(modelReady)completeReceived=SDL_GetTicksNS();}
+                continue;
+            }
             if(magic==RR_HUD_MAGIC&&n>=12){
                 uint32_t header[3];std::memcpy(header,packet,12);
                 if(header[1]==currentSequence&&header[2]<=RR_HUD_CAP&&n==12+header[2]*4){current.hud.resize(header[2]);std::memcpy(current.hud.data(),packet+12,header[2]*4);}
@@ -90,17 +102,17 @@ public:
                 (current.flags&65535)==2&&(incoming.flags&65535)==3&&
                 !ridge::sceneFramesCut(current,incoming);
             bool continuous=have&&message.state==state&&(message.track==track||raceStart);
-            if(modelReady){previous=current;havePrevious=true;if(!queued)timeline.push(current,produced); }
+            if(complete()){previous=current;havePrevious=true;if(!queued)timeline.push(current,produced); }
             if(!continuous)timeline.clear();
             if(continuous&&havePrevious){incoming.hud=previous.hud;incoming.sky=previous.sky;}
             if(!continuous)havePrevious=false;
             current=incoming;currentSequence=message.sequence;have=true;state=message.state;track=message.track;received=SDL_GetTicksNS();
             uint64_t wall=rr_clock_ns();
             produced=double(received)/1e9-(message.published_ns&&wall>=message.published_ns?double(wall-message.published_ns)/1e9:0);
-            queued=false;modelReady=false;assemblyTotal=~0u;assemblyCount=0;seen.fill(false);
+            queued=false;modelReady=false;hudReady=false;hudTotal=~0u;hudCount=0;hudSeen.fill(false);assemblyTotal=~0u;assemblyCount=0;seen.fill(false);
         }
         if(!have||!ridge_scene_state(state)||SDL_GetTicksNS()-received>500000000)return false;
-        if(modelReady&&!queued){timeline.push(current,produced);queued=true;}
+        if(complete()&&!queued){timeline.push(current,produced);queued=true;}
         if(timeline.frames.empty()||SDL_GetTicksNS()-completeReceived>500000000)return false;
         out=timeline.at(double(SDL_GetTicksNS())/1e9,displayInterval);return true;
     }

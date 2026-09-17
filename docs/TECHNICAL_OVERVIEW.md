@@ -30,7 +30,7 @@ an enhanced scene is unavailable.
 
 The implementation includes mirror-mode appearance corrections, wheel-pose
 matching, car/shadow depth compatibility, persistent sign rendering, widescreen
-HUD placement, shared VRAM updates, process ownership and platform-specific
+HUD placement, enhanced selection previews and the animated title flag, shared VRAM updates, process ownership and platform-specific
 presentation diagnostics. Original game timing remains authoritative.
 
 Development was carried out using Codex under human direction and playtesting.

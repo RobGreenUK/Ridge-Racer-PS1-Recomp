@@ -38,7 +38,7 @@ static void initialize(void) {
         if(rr_address(&destination,path))return;
         socket_fd=rr_socket();
         if(socket_fd==RR_INVALID_SOCKET)return;
-        if(rr_buffer(socket_fd,SO_SNDBUF,65536)||rr_nonblocking(socket_fd)){cleanup();return;}
+        if(rr_buffer(socket_fd,SO_SNDBUF,262144)||rr_nonblocking(socket_fd)){cleanup();return;}
         const char*control=getenv("RIDGE_SCENE_INPUT");
         if(control&&strcmp(control,"1")==0&&strlen(path)+4<sizeof input_path){
             snprintf(input_path,sizeof input_path,"%s.pad",path);
@@ -70,6 +70,7 @@ void ridge_live_publish(void) {
     if(f.state==9||f.state==29){unsigned tick=psx_mod_read_half(0x80176ae4u);
         f.flags|=RR_SCENE_REPLAY|((tick>0&&tick<75?1u:0u)<<20);}
     if(psx_mod_read_half(RR_NIGHT_STATE))f.flags|=RR_SCENE_NIGHT;
+    if(ridge_native_menu_state(f.state))f.flags=RR_SCENE_MENU | (f.state<<24) | (psx_mod_read_half(0x801dafe0u)<<20) | psx_mod_read_half(0x801ecbe4u);
     f.track=psx_mod_read_word(RR_TRACK_POINTER);
     for(unsigned i=0;i<3;i++) {
         f.camera[i]=(int32_t)psx_mod_read_word(RR_CAMERA_POSITION+i*4);
@@ -81,9 +82,20 @@ void ridge_live_publish(void) {
     (void)rr_send(socket_fd,&f,sizeof f,&destination);
     struct RRLiveSky sky={RR_SKY_MAGIC,f.sequence,ridge_read_sky()};
     (void)rr_send(socket_fd,&sky,sizeof sky,&destination);
-    struct RRLiveHud hud={0};hud.magic=RR_HUD_MAGIC;hud.sequence=f.sequence;hud.count=ridge_hud_count;
-    memcpy(hud.words,ridge_hud,ridge_hud_count*4);
-    (void)rr_send(socket_fd,&hud,12+ridge_hud_count*4,&destination);
+    if(ridge_native_menu_state(f.state)){
+        if(ridge_hud_valid)for(unsigned offset=0;;offset+=RR_MENU_HUD_CHUNK_CAP){
+            struct RRMenuHudChunk h={0};h.magic=RR_MENU_HUD_MAGIC;h.sequence=f.sequence;
+            h.total=ridge_hud_count;h.offset=offset;h.back_count=ridge_hud_back_count;
+            h.count=h.total-offset;if(h.count>RR_MENU_HUD_CHUNK_CAP)h.count=RR_MENU_HUD_CHUNK_CAP;
+            memcpy(h.words,ridge_hud+offset,h.count*4);
+            (void)rr_send(socket_fd,&h,24+h.count*4,&destination);
+            if(offset+h.count>=h.total)break;
+        }
+    }else{
+        struct RRLiveHud hud={0};hud.magic=RR_HUD_MAGIC;hud.sequence=f.sequence;hud.count=ridge_hud_count;
+        memcpy(hud.words,ridge_hud,ridge_hud_count*4);
+        (void)rr_send(socket_fd,&hud,12+ridge_hud_count*4,&destination);
+    }
     for(unsigned offset=0;;offset+=RR_MODEL_CHUNK_CAP){
         struct RRModelChunk chunk={0};chunk.magic=RR_MODEL_CHUNK_MAGIC;chunk.sequence=f.sequence;
         chunk.total=ridge_model_count;chunk.offset=offset;
