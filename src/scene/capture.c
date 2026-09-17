@@ -110,7 +110,7 @@ static void capture(CPUState *cpu, uint32_t address) {
         fprintf(output,"%s{\"owner\":%u,\"model\":%u,\"site\":%u,\"palette_offset\":%u,\"rotation\":[%u,%u,%u,%u,%u],\"translation\":[%d,%d,%d]}",
             i?",":"",m->owner,m->model,m->site,m->palette_offset,m->rotation[0],m->rotation[1],m->rotation[2],m->rotation[3],m->rotation[4],m->translation[0],m->translation[1],m->translation[2]);
     }
-    fputs("],\"hud\":[",output);for(unsigned i=0;i<ridge_hud_count;i++)fprintf(output,"%s%u",i?",":"",ridge_hud[i]);
+    fprintf(output,"],\"menu_back_count\":%u,\"hud_valid\":%d,\"hud\":[",ridge_hud_back_count,ridge_hud_valid);for(unsigned i=0;i<ridge_hud_count;i++)fprintf(output,"%s%u",i?",":"",ridge_hud[i]);
     struct RRRawSky sky=ridge_read_sky();
     fprintf(output,"],\"sky\":[%d,%d,%d,%u,%u,%u,%u]}\n",sky.pitch,sky.yaw,sky.roll,sky.mirror,sky.clut,sky.rgb,sky.enabled);ridge_models_reset();
     if (sequence % 30 == 0) fflush(output);

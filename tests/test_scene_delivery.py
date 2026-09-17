@@ -41,6 +41,17 @@ int main(int argc,char**argv){
  worldFrame.published_ns=uint64_t(stamp.tv_sec)*1000000000+stamp.tv_nsec-7000000;
  send(&worldFrame,sizeof worldFrame);world.sequence=6;send(&world,20+sizeof(RRRawModel));
  assert(client.poll(out));assert(client.sourceAgeMs()>=7&&client.sourceAgeMs()<100);
+ // Menu model completion alone must not reveal a stale or partial overlay.
+ RRLiveFrame menu=worldFrame;menu.sequence=7;menu.cycles+=1128960;menu.state=7;menu.flags=RR_SCENE_MENU;send(&menu,sizeof menu);
+ chunk(7,0,0,0);assert(!client.poll(out));
+ RRMenuHudChunk h{};h.magic=RR_MENU_HUD_MAGIC;h.sequence=7;h.total=4;h.back_count=2;h.count=2;h.offset=2;h.words[0]=1;h.words[1]=0xe1000001;
+ send(&h,32);assert(!client.poll(out));send(&h,32);assert(!client.poll(out));
+ h.sequence=6;h.offset=0;send(&h,32);assert(!client.poll(out));
+ h.sequence=7;h.back_count=5;send(&h,32);assert(!client.poll(out));
+ h.back_count=2;send(&h,32);assert(client.poll(out)&&out.hud.size()==4&&out.menuBackCount==2&&out.models.empty());
+ Frame next=out;next.time+=1./30;assert(interpolate(out,next,out.time+.01).menuBackCount==2);
+ menu.sequence=8;menu.cycles+=1128960;menu.state=1;menu.flags=3;send(&menu,sizeof menu);chunk(8,0,0,0);
+ assert(client.poll(out)&&out.menuBackCount==0&&!(out.flags&RR_SCENE_MENU));
  close(sender);
 }
 '''

@@ -74,7 +74,7 @@ static void rr_capture_distant_car(uint32_t who){const char*s=getenv("RIDGE_SCEN
  * these models at publication; never wake the full AI or reuse old transforms. */
 void ridge_models_complete(void){
     unsigned state=psx_mod_read_half(RR_STATE);
-    if(!ridge_scene_state(state))return;
+    if(!ridge_world_state(state))return;
     // Setup can change RR_STATE to 5 before its first 3D handler executes.
     // Do not complete cars from that boundary's old camera/entity transforms.
     if(ridge_replay_state(state)&&!ridge_model_count)return;

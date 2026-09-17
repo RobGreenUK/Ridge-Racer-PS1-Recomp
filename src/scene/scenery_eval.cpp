@@ -121,7 +121,7 @@ bool rootOwned=false,listOwned[3]{};std::vector<RRRawModel> reference;
 unsigned checks=0,mismatches=0;
 bool fullEnabled(){const char*s=std::getenv("RIDGE_SCENE_FULL_COURSE");return !s||std::strcmp(s,"0")!=0;}
 void sceneryEntry(CPUState*cpu,uint32_t entry){
- if(!fullEnabled()||!ridge_scene_state(psx_mod_read_half(0x801d6d28)))return;
+ if(!fullEnabled()||!ridge_world_state(psx_mod_read_half(0x801d6d28)))return;
  if(entry!=0x80015b90&&cpu->gpr[31]>=0x80015b90&&cpu->gpr[31]<0x80017068)return;
  RRRawModel models[RR_MODEL_CAP];int n=ridge_scenery_evaluate(g_psx_ram,cpu,entry,1,models,RR_MODEL_CAP);
  if(n<0||ridge_model_count+unsigned(n)>RR_MODEL_CAP){ridge_model_overflow++;return;}

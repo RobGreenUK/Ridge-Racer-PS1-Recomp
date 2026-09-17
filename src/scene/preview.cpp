@@ -66,7 +66,7 @@ int main(int argc,char**argv) try {
     std::vector<Node>nodes;std::vector<Frame>frames;uint32_t nn=0,nf=0;
     if(live.empty()){
     std::ifstream in(argv[1],std::ios::binary);in.exceptions(std::ios::badbit|std::ios::failbit);
-    char magic[8];in.read(magic,8);if(std::memcmp(magic,"RRSCENE1",8)&&std::memcmp(magic,"RRSCENE2",8)&&std::memcmp(magic,"RRSCENE3",8)&&std::memcmp(magic,"RRSCENE4",8)&&std::memcmp(magic,"RRSCENE5",8))throw std::runtime_error("invalid scene header");
+    char magic[8];in.read(magic,8);if(std::memcmp(magic,"RRSCENE1",8)&&std::memcmp(magic,"RRSCENE2",8)&&std::memcmp(magic,"RRSCENE3",8)&&std::memcmp(magic,"RRSCENE4",8)&&std::memcmp(magic,"RRSCENE5",8)&&std::memcmp(magic,"RRSCENE6",8))throw std::runtime_error("invalid scene header");
     nn=u32(in);nf=u32(in);if(nn<3||nn>368||nf<2||nf>18000)throw std::runtime_error("invalid scene counts");
     nodes.resize(nn);for(auto&n:nodes){n.center=vec(in);n.halfWidth=f32(in);if(n.halfWidth<=0||n.halfWidth>1000)throw std::runtime_error("invalid width");}
     frames.resize(nf);
@@ -83,6 +83,7 @@ int main(int argc,char**argv) try {
         }
         if(magic[7]>='3'){auto&s=f.sky;s.pitch=f32(in);s.yaw=f32(in);s.roll=f32(in);s.mirror=u32(in);s.clut=u32(in);s.rgb=u32(in);s.enabled=u32(in);}
         if(magic[7]>='4'){unsigned count=u32(in);if(count>RR_HUD_CAP)throw std::runtime_error("oversized HUD");f.hud.resize(count);for(auto&w:f.hud)w=u32(in);}
+        if(magic[7]>='6'){f.menuBackCount=u32(in);if(f.menuBackCount>f.hud.size())throw std::runtime_error("invalid menu layers");}
     }
     }
     VramClient vramClient;std::vector<uint16_t>liveVram;ScreenClient screen;LiveClient client;if(!live.empty())client.open(live);
@@ -276,7 +277,7 @@ int main(int argc,char**argv) try {
             if(b.z<near)b=b+(a-b)*((near-b.z)/(a.z-b.z));
             SDL_RenderLine(renderer,cx+focal*a.x/a.z,cy+focal*a.y/a.z,cx+focal*b.x/b.z,cy+focal*b.y/b.z);
         };
-        if(ready&&!assets.empty()){mesh.sky.draw(renderer,f,width,height);mesh.draw(renderer,f,camera,width,height);}
+        if(ready&&!assets.empty()){if(f.flags&RR_SCENE_MENU)hud.draw(renderer,f,mesh.sky.vram,width,height,0,f.menuBackCount);mesh.sky.draw(renderer,f,width,height);mesh.draw(renderer,f,camera,width,height);}
         else {
         std::vector<Vec>left(nn),right(nn);
         for(size_t i=0;i<nn;i++) {
@@ -295,7 +296,7 @@ int main(int argc,char**argv) try {
             car[i]=f.car+Vec{x*std::cos(f.yaw)+z*std::sin(f.yaw),y,-x*std::sin(f.yaw)+z*std::cos(f.yaw)};
         }
         if(ready&&chase&&f.models.empty())for(int i=0;i<8;i++)for(int bit:{1,2,4})if(!(i&bit))line(car[i],car[i|bit]);
-        if(ready)hud.draw(renderer,f,mesh.sky.vram,width,height);
+        if(ready)hud.draw(renderer,f,mesh.sky.vram,width,height,f.menuBackCount);
         SDL_SetRenderDrawColor(renderer,224,236,246,255);
         char label[220];std::snprintf(label,sizeof label,"NATIVE SCENE | %.0f fps target | t %.2fs | %s\nExperimental renderer | ESC closes.",fps,t,chase?"chase camera":"game camera");
         if(statsOverlay)SDL_RenderDebugText(renderer,20,20,label);

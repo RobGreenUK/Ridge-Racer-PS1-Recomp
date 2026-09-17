@@ -232,8 +232,8 @@ struct CourseMesh {
         };
         auto addQuad=[&](const MeshQuad&q,const ModelPose*pose){addTriangle(q,pose,{0,1,2});addTriangle(q,pose,{2,1,3});};
         bool night=nightScenery(frame);
-        if(chunkBounds.empty())for(const auto&q:quads)if(!q.dayOnly||!night)addQuad(q,nullptr);
-        for(size_t chunk=0;chunk<chunkBounds.size();chunk++){
+        if(!(frame.flags&RR_SCENE_MENU)&&chunkBounds.empty())for(const auto&q:quads)if(!q.dayOnly||!night)addQuad(q,nullptr);
+        for(size_t chunk=0;!(frame.flags&RR_SCENE_MENU)&&chunk<chunkBounds.size();chunk++){
             if(!chunkBounds[chunk].visible(frame,camera,nullptr,width,height)){culledChunks++;continue;}
             for(size_t i=chunk*chunkSize;i<std::min(quads.size(),(chunk+1)*chunkSize);i++){const auto&q=quads[i];if(!q.dayOnly||!night)addQuad(q,nullptr);}
         }
