@@ -135,3 +135,24 @@ a cross-build does not substitute for it.
 For an agent handoff, report changed files, build/launch identity, checks actually
 run and unresolved questions. Keep explanations factual and reproducible so a
 human or another agent can continue from the repository itself.
+
+## Controller protocol compatibility
+
+Keep `[controller] default_mode = "digital"` and `lock_mode = true` in
+`game.toml`. The original pad decoder accepts digital ID `0x41` and neGcon ID
+`0x23`, but rejects DualShock ID `0x73`. A modern host gamepad is not evidence
+that the original game understands DualShock emulation. The runtime's digital
+mode maps its buttons and left-stick directions to the supported wire format.
+
+The SDK applies the game lock after saved settings, again on advanced-launcher
+return, and disables analogue multitap overrides for a digital-locked title.
+This preserves device assignment and mappings while correcting stale analogue
+settings. Do not replace that with a one-time preference edit or change the guest
+input decoder. The viewer's keyboard bridge and the companion's controller path
+must both reach a supported pad type, including before the main game has loaded.
+
+An isolated SIO-level regression with saved analogue mode confirmed that Start
+arrived as `0073f7ff80808080` and was rejected before the lock; with the lock the
+packet was `0041f7ff` and the original decoder accepted Start. These are protocol
+observations, not copyrighted fixtures. Physical controller connection, custom
+bindings and hotplug still require device-specific playtesting.
