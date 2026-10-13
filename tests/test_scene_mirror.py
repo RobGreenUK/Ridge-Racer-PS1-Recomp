@@ -1,9 +1,10 @@
 """Mirror-course rendering reflects all 3D geometry without changing simulation."""
 from pathlib import Path
-import shlex
 import subprocess
 import tempfile
 import unittest
+
+from native_build import gl_harness_flags
 ROOT=Path(__file__).resolve().parents[1]
 HARNESS=r'''
 #define main ridge_preview_main
@@ -78,6 +79,6 @@ class MirrorTests(unittest.TestCase):
     def test_world_models_textures_and_transition(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp);(p/'test.cpp').write_text(HARNESS)
-            flags=shlex.split(subprocess.check_output(['/opt/homebrew/bin/pkg-config','--cflags','--libs','sdl3'],text=True))
-            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-framework','OpenGL','-o',str(p/'test')],check=True,capture_output=True)
+            flags=gl_harness_flags()
+            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-o',str(p/'test')],check=True,capture_output=True)
             subprocess.run([str(p/'test')],check=True,capture_output=True,timeout=30)

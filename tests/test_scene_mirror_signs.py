@@ -1,6 +1,8 @@
 """Readable mirror signage must not unmirror the road or neighbouring atlas tiles."""
 from pathlib import Path
-import shlex,subprocess,tempfile,unittest
+import subprocess,tempfile,unittest
+
+from native_build import gl_harness_flags
 ROOT=Path(__file__).resolve().parents[1]
 HARNESS=r'''
 #define main ridge_preview_main
@@ -55,7 +57,7 @@ class MirrorSignTests(unittest.TestCase):
     def test_atlas_selection_composite_display_and_readable_pixels(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp);(p/'test.cpp').write_text(HARNESS)
-            flags=shlex.split(subprocess.check_output(['/opt/homebrew/bin/pkg-config','--cflags','--libs','sdl3'],text=True))
-            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-framework','OpenGL','-o',str(p/'test')],check=True,capture_output=True)
+            flags=gl_harness_flags()
+            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-o',str(p/'test')],check=True,capture_output=True)
             result=subprocess.run([str(p/'test')],capture_output=True,text=True,timeout=30)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
