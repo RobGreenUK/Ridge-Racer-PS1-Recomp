@@ -116,6 +116,11 @@ applies patches idempotently without advancing those pins:
 - [GL readback-order patch](../patches/psxrecomp-gl-readback-order.patch): flush
   queued draw work before readback consumes dirty regions. Otherwise a diagnostic
   peek can leave later CPU framebuffer reads inconsistent with GPU contents.
+- [macOS executable-path patch](../patches/psxrecomp-macos-exe-dir.patch): find
+  the setup host's own folder through dyld on macOS, where `/proc/self/exe` does
+  not exist. Without it a Finder launch starts in `$HOME`, the setup wizard
+  never opens, and Play fails with a BIOS mismatch. Backported from upstream
+  PSXRecomp `master`; drop it when the pin moves past that fix.
 
 These are part of a reproducible build. An unrecorded local submodule edit is not
 available to another contributor's clone. Preserve upstream licences when adding
