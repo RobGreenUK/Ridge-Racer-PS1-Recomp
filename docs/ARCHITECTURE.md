@@ -121,6 +121,11 @@ applies patches idempotently without advancing those pins:
   not exist. Without it a Finder launch starts in `$HOME`, the setup wizard
   never opens, and Play fails with a BIOS mismatch. Backported from upstream
   PSXRecomp `master`; drop it when the pin moves past that fix.
+- [macOS system-compiler patch](../patches/psxrecomp-macos-system-compiler.patch):
+  accept the macOS portable toolchain, which ships CMake, Ninja and Python but
+  no clang, and check Apple's Command Line Tools compiler instead. Without it
+  the setup wizard treats a good download as broken and loops on "cmake.exe is
+  missing or will not run". Backported from upstream PSXRecomp `master`.
 
 These are part of a reproducible build. An unrecorded local submodule edit is not
 available to another contributor's clone. Preserve upstream licences when adding
