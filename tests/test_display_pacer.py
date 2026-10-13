@@ -1,11 +1,12 @@
 """The Mac display callback wakes rendering and stops cleanly on a lost source."""
 import csv
-import shlex
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+from native_build import gl_harness_flags
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,11 +41,9 @@ int main(int argc,char**argv) {
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp)
             (path / 'test.cpp').write_text(source)
-            flags = shlex.split(subprocess.check_output(
-                ['/opt/homebrew/bin/pkg-config', '--cflags', '--libs', 'sdl3'], text=True))
+            flags = gl_harness_flags()
             subprocess.run(['c++', '-std=c++17', '-I'+str(ROOT/'src/scene'),
-                            str(path/'test.cpp'), *flags, '-framework', 'OpenGL',
-                            '-o', str(path/'test')], check=True, capture_output=True)
+                            str(path/'test.cpp'), *flags, '-o', str(path/'test')], check=True, capture_output=True)
             subprocess.run([str(path/'test'),str(path/'trace')], check=True, capture_output=True, timeout=10)
 
             with (path/'trace.callbacks.csv').open() as stream:rows=list(csv.DictReader(stream))

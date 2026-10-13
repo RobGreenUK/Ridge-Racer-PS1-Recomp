@@ -3,10 +3,11 @@ import csv
 import importlib.util
 import json
 from pathlib import Path
-import shlex
 import subprocess
 import tempfile
 import unittest
+
+from native_build import gl_harness_flags
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('analyze_frame_times',ROOT/'tools/analyze_frame_times.py')
 analyzer=importlib.util.module_from_spec(spec);spec.loader.exec_module(analyzer)
@@ -60,8 +61,8 @@ int main(int argc,char**argv){
 '''
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp);(p/'test.cpp').write_text(harness)
-            flags=shlex.split(subprocess.check_output(['/opt/homebrew/bin/pkg-config','--cflags','--libs','sdl3'],text=True))
-            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-framework','OpenGL','-o',str(p/'test')],check=True,capture_output=True)
+            flags=gl_harness_flags()
+            subprocess.run(['c++','-std=c++17','-I'+str(ROOT/'src/scene'),str(p/'test.cpp'),*flags,'-o',str(p/'test')],check=True,capture_output=True)
             subprocess.run([str(p/'test'),str(p/'capture')],check=True,capture_output=True,timeout=20)
             with (p/'capture.csv').open() as stream:rows=list(csv.DictReader(stream))
             self.assertTrue((p/'capture.live.csv.marker-1.bmp').is_file())
