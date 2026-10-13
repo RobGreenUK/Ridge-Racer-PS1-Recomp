@@ -15,6 +15,8 @@ CMakeLists.txt VERSION game.toml game_options.toml symbols.toml psx_symbols.h
 codegen_setup.c codegen_setup.h catalog_identity.json disc_manifest.json disc_probe.json
 framework_pins.txt""".split())
 FILES.add('Test Ridge Racer Pacing.command')
+# Reviewed CI workflows: they build from source and never stage disc data.
+FILES |= {'.github/workflows/release.yml', '.github/workflows/tests.yml'}
 DOCS = {
     'docs/BUILD_MACOS.md', 'docs/BUILD_WINDOWS.md', 'docs/PLAY.md',
     'docs/TECHNICAL_OVERVIEW.md', 'docs/ARCHITECTURE.md',

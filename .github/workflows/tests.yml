@@ -1,0 +1,44 @@
+# Project test suite on an Apple Silicon Mac runner.
+#
+# Runs on pull requests and pushes to main. No disc, BIOS or generated game C
+# is used: the suite compiles small synthetic harnesses against the scene
+# sources. Several tests open a real OpenGL context; if a hosted runner cannot
+# provide one those tests fail rather than skip, which is the evidence we want.
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    name: macOS arm64 unit tests
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install SDL3 and pkg-config
+        run: brew install sdl3 pkg-config
+
+      - name: Apply runtime patches
+        run: sh scripts/apply-runtime-patches.sh
+
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Source audit
+        run: python3 tools/audit_source.py

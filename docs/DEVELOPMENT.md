@@ -112,6 +112,26 @@ real-GL comparison, live smoke test and full gameplay test answer different
 questions. Native Windows validation requires running the Windows-native workflow;
 a cross-build does not substitute for it.
 
+## Setup-host release packages
+
+Player downloads are PSXRecomp **setup-host** zips. A zip holds the host
+executable, this project's sources, the patched `psxrecomp/` and `recomp-ui/`
+trees and the code emitters. It never holds disc data, a retail BIOS or
+generated game C. On first launch the player selects their own disc; the
+setup wizard verifies it, generates the game C locally and rebuilds the
+playable executable under `build-release/`. Later launches of the zip's
+executable forward straight to that build.
+
+[release.yml](../.github/workflows/release.yml) builds `windows-x64` and
+`macos-arm64` zips. A manual run uploads them as workflow artifacts; tick
+**publish** to also tag and create a GitHub Release. The workflow applies the
+recorded runtime patches before building, so add any new patch to `patches/`
+rather than editing the submodule. [scripts/package_setup_release.sh](../scripts/package_setup_release.sh)
+lists the project files a player's rebuild needs; a new compile input belongs there too.
+
+The first setup-host package plays the original renderer only. The enhanced
+renderer still needs the local asset preparation and launchers described above.
+
 ## Branch, review and merge
 
 1. Inspect `git status --short` and `git submodule status`; preserve unrelated edits.
